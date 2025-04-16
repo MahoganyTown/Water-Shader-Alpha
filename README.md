@@ -38,6 +38,7 @@ __Can I use your code in my shader projects?__ Yes, of course!
 - Clouds, stars, and particles not reflected
 - Performance bottleneck in shadow geometry shader
 - MacOS not supported
+- OpenGL 4.3 required
 
 ## Links
 - [Superbomb17's Water Shader Mod Update](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/1285819-1-6-2-water-shader-alpha-over-325-000-downloads)

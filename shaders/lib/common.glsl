@@ -67,7 +67,7 @@ uniform mat4 shadowModelViewInverse;
 const float eyeBrightnessHalflife = 15.0f;
 
 // Settings for shadow pass
-const int shadowMapResolution = 4096;
+const int shadowMapResolution = 2048;
 const float shadowIntervalSize = 0.0f;
 
 // Texture targets clear settings
