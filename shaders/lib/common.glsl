@@ -86,7 +86,7 @@ const int colortex3Format = RGBA16F;    // Water mask
 const int colortex4Format = RGBA16F;    // ID of water blocks, water mask for next frame for shadow pass (unexpanded)
 const int colortex5Format = RGBA;       // Ice mask
 const int colortex6Format = RGBA16F;    // Glass mask
-const int colortex7Format = RGBA;       // -
+const int colortex7Format = RGBA;       // Lightmap color
 const int colortex8Format = RGBA;       // Sun and moon texture
 const int colortex9Format = RGBA;       // Water color
 const int colortex10Format = RGBA;      // Terrain mask
@@ -94,16 +94,17 @@ const int colortex11Format = RGBA;      // Water tiling
 */
 
 // Constant variables for water shader
-const vec4 necrowizzardWaterColor = vec4(0.08, 0.18, 0.31, 1.0);                // Necrowizzard water color
-const vec4 superbomb17WaterColor = vec4(0.27, 0.57, 0.89, 1.0);                 // Superbomb17 water color
-const vec4 necrowizzardUnderwaterFogColorDay = vec4(0.27, 0.45, 0.78, 0.99);    // Fog color when underwater (daytime)
-const vec4 superbomb17UnderwaterFogColorDay = vec4(0.05, 0.16, 0.37, 0.99);     // Fog color when underwater (daytime)
+const vec4 necrowizzardWaterColor = vec4(0.0, 0.4, 0.3, 1.0);                   // Necrowizzard water color
+const vec4 superbomb17WaterColor = vec4(0.0, 0.4, 0.3, 1.0);                    // Superbomb17 water color
+const vec4 necrowizzardUnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);    // Necrowizzard fog color when underwater (daytime)
+const vec4 superbomb17UnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);     // Superbomb17 fog color when underwater (daytime)
 const vec4 underwaterFogColorNight = vec4(0.02, 0.13, 0.24, 0.9);               // Fog color when underwater (nighttime)
+const float waterSurfaceTransparency = 0.35;                                                    // Water surface/texture transparency
 const float waterClipPlane = 1.0;                                                               // Delete vertices too close from water surface (strange results with player reflection otherwise)
 const float eyeCameraOffset = 1.68;                                                             // Eye camera offset from player's feet
 const float waterBlockOffset = 1.005;                                                           // Water block clipping plane height (inside block)
 const int lowerWorldBound = -64;                                                                // Lowest possible water reflection plane height (Minecraft minimum block height)
-const float waterBlendFactor = 0.60;                                                            // How much to blend flowing water to scene
+const float waterBlendFactor = 0.20;                                                            // How much to blend flowing water to scene
 
 // Fog constants
 const int GL_LINEAR = 9729;

@@ -39,14 +39,10 @@ void outVertex(int i, float amount) {
 
 void main() {
     // Used for interpolating between still water and flowing water (for reflection seamless transition)
-    float stillWaterV0 = (isStillWater(gshPosition[0], gshNormal[0])) ? 1.0 : 0.0;
-    float stillWaterV1 = (isStillWater(gshPosition[1], gshNormal[1])) ? 1.0 : 0.0;
-    float stillWaterV2 = (isStillWater(gshPosition[2], gshNormal[2])) ? 1.0 : 0.0;
-
-    // Pass-thru
-    outVertex(0, stillWaterV0);
-    outVertex(1, stillWaterV1);
-    outVertex(2, stillWaterV2);
+    for (int i = 0; i < 3; i++) {
+        float stillWaterV = (isStillWater(gshPosition[i], gshNormal[i])) ? 1.0 : 0.0;
+        outVertex(i, stillWaterV);
+    }
 
     EndPrimitive();
 }

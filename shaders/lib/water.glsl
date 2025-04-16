@@ -178,6 +178,10 @@ float getFresnelFactor(vec3 viewDir, vec3 waterNormal) {
     return fresnel;
 }
 
+vec4 getWaterLighting(vec2 uv) {
+    return texture(colortex7, uv);
+}
+
 vec4 blendWaterInScene(vec4 color, vec4 waterRawColor, float waterBlendFactor, float transitionAmount) {
     // Water compositing: add water to scene
     waterBlendFactor *= 1.0 - transitionAmount;

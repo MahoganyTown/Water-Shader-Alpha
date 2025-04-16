@@ -40,6 +40,7 @@ void main() {
 		color = applyFog(outColor * glcolor, 1.0, false);
 	} else if (blockID > 10000) {
 		// Glass
+		y = 1.0;
 		isItGlass = 1.0;
 		color = applyFog(outColor * glcolor, 1.0, false);
 	} else {
@@ -49,17 +50,17 @@ void main() {
 		outColor.a = 1.0;
 		waterPosition = position;
 		waterNormal = vec4(encodeNormal(normal), 1.0);
-		waterColoredTexture = applyFog(outColor * getWaterColor(), 1.0, false);
+		waterColoredTexture = applyFog(outColor, 1.0, false);
 		waterColoredTexture = tintWater(waterColoredTexture, position);
+		color = vec4(outColor.rgb, waterBlendFactor) * glcolor;
 	}
 
 	// Water tiling
-	float tiling = 16;
+	float tiling = 10.0;
 	vec3 worldPos = getWorldPositionFromModelPosition(position);
-	tiling += min(cameraPosition.y - worldPos.y, 48);
-	float x = mod(position.x, tiling) / tiling;
-	float z = mod(position.z, tiling) / tiling;
-	
+	float x = mod(worldPos.x, tiling) / tiling;
+	float z = mod(worldPos.z, tiling) / tiling;
+
 	// Output masks
 	iceMask = vec4(isItIce, 0.0, 0.0, isItIce);
 	waterMask = vec4(length(position), stillWaterAmount, isItWater, isItWater);

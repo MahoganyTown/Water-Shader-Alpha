@@ -17,9 +17,10 @@ in vec4 position;
 in vec4 glcolor;
 in flat int blockID;
 
-/* RENDERTARGETS: 0,10 */
+/* RENDERTARGETS: 0,10,7 */
 layout(location = 0) out vec4 color;
 layout(location = 1) out vec4 terrainMask;
+layout(location = 2) out vec4 terrainLightMapForWater;
 
 void main() {
 	color = texture(gtexture, texcoord) * glcolor;
@@ -35,6 +36,10 @@ void main() {
 
 	// Apply fog
 	color = applyFog(color, 1.0, false);
+
+	// Terrain lighting (for darker water in deeper areas)
+	terrainLightMapForWater = clamp(pow(texture(lightmap, lmcoord), vec4(1.0)), 0.0, 1.0);
+	terrainLightMapForWater *= getVanillaLighting(n);
 
 	// Terrain mask
 	terrainMask = vec4(position.xyz, 1.0);

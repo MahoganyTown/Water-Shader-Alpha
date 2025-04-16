@@ -1,16 +1,17 @@
 option.INFO=Water Shader Alpha
-value.INFO.0=v1.0
+value.INFO.0=v1.1
 
 option.STYLE=Water surface style
-value.STYLE.1=Necrowizzard
-value.STYLE.2=Superbomb17
+value.STYLE.1=§bNecrowizzard
+value.STYLE.2=§bSuperbomb17
 
-option.PLANES=Available simultaneous water levels (1: Low, 4 High)
-value.PLANES.1=1
-value.PLANES.2=2
-value.PLANES.3=3
-value.PLANES.4=4
+option.PLANES=Available simultaneous water levels
+value.PLANES.1=§a1 - Low
+value.PLANES.2=§e2 - Medium
+value.PLANES.3=§c3 - High
+value.PLANES.4=§4 4 - Extreme
+option.PLANES.comment=Number of water patches at different heights handled for reflections.
 
-option.SKYTEXTURED=Sun & moon reflection (Experimental)
-value.SKYTEXTURED.1=ON
-value.SKYTEXTURED.2=OFF
+option.SKYTEXTURED=Sun & moon reflection (§cExperimental)
+value.SKYTEXTURED.1=§aON
+value.SKYTEXTURED.2=§cOFF

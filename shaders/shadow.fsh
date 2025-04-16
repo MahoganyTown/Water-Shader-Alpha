@@ -24,15 +24,13 @@ layout(location = 1) out vec4 shadowcolor01;
 
 void computeBackgroundColor() {
     /* Background color in water (sky + sun/moon) */
-    vec4 waterColor = getWaterColor();
-    vec4 skycol = tintWater(waterColor, waterModelPos);
+    vec4 skycol = getSkyColor(waterModelPos);
     skycol = addSkyTexturedToWater(skycol, waterNormal, waterModelPos);
     
-    // Store water ID on SSBO water mask 
-    // (water mask uses SSBO instead of regular buffer because need to read/write data in this shadowpass)
+    // Store water ID on SSBO water mask
     mask.data[getSSBOWaterMaskIndex(gl_FragCoord.xy)] = getWaterID(waterModelPos);
     
-    // Sky is background in water reflection -> always behind
+    // Sky color is background in water reflection -> always behind
     // This is always water fragments here
     gl_FragDepth = 1.0;
     shadowcolor00 = skycol;

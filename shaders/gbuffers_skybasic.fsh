@@ -8,8 +8,9 @@ uniform int renderStage;
 
 in vec4 glcolor;
 
-/* RENDERTARGETS: 0 */
+/* RENDERTARGETS: 0,7 */
 layout(location = 0) out vec4 color;
+layout(location = 1) out vec4 light;
 
 void main() {
 	if (renderStage == MC_RENDER_STAGE_STARS) {
@@ -19,5 +20,5 @@ void main() {
 		color = vec4(calcSkyColor(normalize(pos)), 1.0);
 	}
 
-	color = applyFog(color, 1.0, false);
+	light = vec4(1.0);
 }
