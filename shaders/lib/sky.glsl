@@ -12,26 +12,6 @@ vec3 getMoonPosition() {
 	return mat3(gbufferModelViewInverse) * moonPosition;
 }
 
-vec3 getSunDir() {
-    // Compute sun direction in world space
-    return normalize(getSunPosition());
-}
-
-vec3 getMoonDir() {
-    // Compute moon direction in world space
-    return normalize(getMoonPosition());
-}
-
-vec3 getLightCasterDir() {
-	// Return sun color if day else moon color
-	if (worldTime > 13500) {
-		getMoonDir();
-	} else {
-		getSunDir();
-	}
-	return getMoonDir();
-}
-
 float getSunAmount() {
 	// If in between 0 and 12000 => 1.0
 	// If between 14000 and 22000 => 0.0
@@ -249,4 +229,16 @@ vec4 skyTexturedReflection(vec3 ro, vec3 rd, vec4 color) {
 	color = reflectLightCaster(ro, rd, color, getSunPosition(), getSunSize(), vec2(-0.81));
 
 	return color;
+}
+
+vec4 getCloudMask(vec2 uv) {
+	return texture(colortex12, uv);
+}
+
+bool isCloud(vec4 mask) {
+	return mask.r > 0.99;
+}
+
+float getCloudLength(vec4 mask) {
+	return mask.g;
 }

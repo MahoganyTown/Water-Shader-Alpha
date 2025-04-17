@@ -65,7 +65,8 @@ void passThru() {
 
 void main() {
 	#if SKYTEXTURED == 1
-    	outForOffline();
+		if (frameCounter == 1)
+    		outForOffline();
 	#endif
 
 	passThru();

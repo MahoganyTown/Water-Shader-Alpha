@@ -157,7 +157,8 @@ bool isStillWater(vec4 pos, vec3 normal) {
     float ratioPointingUp = dot(normal, vec3(0.0, 1.0, 0.0));
     float YPos = fract(worldPos.y);
 
-    return ratioPointingUp >= 0.981 && YPos >= 0.885;
+    // return ratioPointingUp >= 0.988 && YPos >= 0.885;
+    return YPos >= 0.885 && YPos < 0.90 && ratioPointingUp >= 0.988;
 }
 
 vec3 getWaterTiling(vec2 uv) {

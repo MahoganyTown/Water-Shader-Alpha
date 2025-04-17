@@ -5,6 +5,7 @@
 
 out vec2 texcoord;
 out vec4 glcolor;
+out vec4 position;
 
 void main() {
     vec3 pos = (gl_ModelViewMatrix * gl_Vertex).xyz;
@@ -13,4 +14,5 @@ void main() {
     gl_FogFragCoord = length(pos);
 	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
 	glcolor = gl_Color;
+    position = gl_Vertex;
 }

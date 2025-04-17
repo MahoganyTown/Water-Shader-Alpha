@@ -181,7 +181,7 @@ void getSurfaceEffect(in vec4 stencil, inout vec4 reflectionColor, inout vec4 wa
 
             reflectionColor.rgb += clamp((str * col), 0.0, 3.0);
         }
-        reflectionColor /= 6;
+        reflectionColor /= 6.0;
     }
 
     color = vec4(color.rgb, 1.0) + vec4(reflectionColor.rgb, 1.0);
@@ -201,8 +201,8 @@ vec4 computeFinalWaterColor(vec4 stencil, vec4 color, float fadeAmount, bool gla
         in_water = 0.0;
 
     // combine reflection and scene at water surfaces
-    float reflection_strength = 0.30 * (stencil.r-0.1);
-    float disable_refl = stencil.r-0.1;
+    float reflection_strength = 0.30 * (stencil.r - 0.1);
+    float disable_refl = stencil.r - 0.1;
     
     if (disable_refl <= 0.0) disable_refl = 0.0; // no reflection
     
@@ -212,9 +212,9 @@ vec4 computeFinalWaterColor(vec4 stencil, vec4 color, float fadeAmount, bool gla
     
     // more color in darker water in relation to the reflection
     // color darkened
-    float difference = (reflection_color.r+reflection_color.g+reflection_color.b)/3.0 - (color.r + color.g + color.b)/5.5;
+    float difference = (reflection_color.r + reflection_color.g + reflection_color.b) / 3.0 - (color.r + color.g + color.b) / 5.5;
     if (difference < 0.0) difference = 0.0;
-    vec3 regular_color = color.rgb * (1.0-in_water*reflection_strength) + (in_water * (difference * getWaterColor().rgb));
+    vec3 regular_color = color.rgb * (1.0 - in_water * reflection_strength) + (in_water * (difference * getWaterColor().rgb));
     
     color = vec4(regular_color, 1.0);
     reflectionColor = vec4(reflection_color, 1.0);
@@ -224,9 +224,8 @@ vec4 computeFinalWaterColor(vec4 stencil, vec4 color, float fadeAmount, bool gla
 
     // Superbomb17 effect on water surface
     #if STYLE == 2
-        if (!glass && isEyeInWater == 0) {
+        if (!glass && isEyeInWater == 0)
             getSurfaceEffect(stencil, reflectionColor, waterRawColor, fadeAmount);
-        }
     #endif
 
     // Blending reflection factor (how much of reflection color in final fragment)
@@ -243,38 +242,44 @@ void main() {
 
     vec4 waterMask = getWaterMask(texcoord);
     vec4 glassMask = getGlassMask(texcoord);
+    vec4 cloudMask = getCloudMask(texcoord);
     vec4 iceMask = getIceMask(texcoord);
     vec4 stencil = getStencil(texcoord);
 
+    vec4 waterModelPos = getWaterModelPos(texcoord);
     vec3 waterNormal = getWaterNormal(texcoord);
     vec4 waterRawColor = getWaterRawColor(texcoord);
 
     bool water = isWater(waterMask);
     bool glass = isGlass(glassMask);
     bool ice = isIce(iceMask);
+    bool cloud = isCloud(cloudMask);
 
     float glassAlpha = getGlassTransparency(glassMask);
     float fadeAmount = getTransitionAmount(waterMask);
     float waterLength = getWaterDistance(waterMask);
     float glassLength = getGlassDistance(glassMask);
+    float cloudLength = getCloudLength(cloudMask);
 
-    if (isLookingAtStillWaterThroughTransluscent(glass, ice, water, waterLength, glassLength, waterNormal)) {
-        // Mare sure you can see water reflection through glass and ice when placed in water on solid block
-        fadeAmount = 1.0;
+    if (!cloud && cloudLength < waterLength) {
+        // Make sure clouds hide water like the rest of terrain, if no clouds in front then do water stuff
+
+        if (isLookingAtStillWaterThroughTransluscent(glass, ice, water, waterLength, glassLength, waterNormal)) {
+            // Mare sure you can see water reflection through glass and ice when placed in water on solid block
+            fadeAmount = 1.0;
+        }
+
+        if ((water || glass) && !ice) {
+            // Compute reflections, refractions, and wawing water into color
+            color = computeFinalWaterColor(stencil, color, fadeAmount, glass, glassAlpha, waterRawColor);
+        }
+
+        if (water && isEyeInWater == 0) {
+            // Blend flowing water to scene when outside water
+            float divisor = (glassLength < waterLength) ? 2.0 : 8.0;
+            float factor = max(0.0, waterBlendFactor - glassAlpha / divisor);
+            color = blendWaterInScene(color, waterRawColor, factor, fadeAmount);
+            color = applyFogOnWater(color, waterModelPos);
+        }
     }
-
-    if ((water || glass) && !ice) {
-        // Compute reflections, refractions, and wawing water into color
-        color = computeFinalWaterColor(stencil, color, fadeAmount, glass, glassAlpha, waterRawColor);
-    }
-
-    if (water && isEyeInWater == 0) {
-        // Blend flowing water to scene when outside water
-        float divisor = (glassLength < waterLength) ? 2.0 : 8.0;
-        float factor = max(0.0, waterBlendFactor - glassAlpha / divisor);
-        color = blendWaterInScene(color, waterRawColor, factor, fadeAmount);
-    }
-
-    // Debug
-    // color.rgb = texture(colortex11, texcoord).rgb;
 }

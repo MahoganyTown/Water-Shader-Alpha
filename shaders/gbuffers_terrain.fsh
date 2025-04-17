@@ -26,7 +26,7 @@ void main() {
 	color = texture(gtexture, texcoord) * glcolor;
 	color *= texture(lightmap, lmcoord);
 	if (color.a < alphaTestRef && blockID != 5) {
-		// Remove / fill holes in tree leaves
+		// Fill holes in tree leaves to match reflections
 		discard;
 	}
 

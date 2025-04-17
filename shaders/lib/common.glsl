@@ -25,9 +25,9 @@ uniform sampler2D colortex14;
 uniform sampler2D colortex15;
 
 // Uniform variables
+uniform int fogMode;
 uniform vec3 fogColor;
 uniform vec3 skyColor;
-uniform int fogMode;
 uniform int isEyeInWater;
 uniform float eyeAltitude;
 uniform ivec2 eyeBrightness;
@@ -71,26 +71,26 @@ const int shadowMapResolution = 2048;
 const float shadowIntervalSize = 0.0f;
 
 // Texture targets clear settings
-const bool colortex4Clear = false;
 const bool colortex8Clear = false;
 const vec4 shadowcolor0ClearColor = vec4(0.0, 0.0, 0.0, 5.0);
 
 // Texture formats
 /*
-const int shadowcolor0Format = RGBA16F; // reflection color
-const int shadowcolor1Format = RGBA;    // reflection mask (is water in reflection)
-const int colortex0Format = RGBA;       // scene color
-const int colortex1Format = RGBA32F;    // position of water blocks in model space
-const int colortex2Format = RGBA;       // scene normal (encoded and in world space)
+const int shadowcolor0Format = RGBA16F; // Reflection color
+const int shadowcolor1Format = RGBA;    // Reflection mask (is water in reflection)
+const int colortex0Format = RGBA;       // Scene color
+const int colortex1Format = RGBA32F;    // Position of water blocks in model space
+const int colortex2Format = RGBA;       // Scene normal (encoded and in world space)
 const int colortex3Format = RGBA16F;    // Water mask
-const int colortex4Format = RGBA16F;    // ID of water blocks, water mask for next frame for shadow pass (unexpanded)
+const int colortex4Format = RGBA;       // -
 const int colortex5Format = RGBA;       // Ice mask
 const int colortex6Format = RGBA16F;    // Glass mask
 const int colortex7Format = RGBA;       // Lightmap color
-const int colortex8Format = RGBA;       // Sun and moon texture
+const int colortex8Format = RGBA;       // Sun and moon textures
 const int colortex9Format = RGBA;       // Water color
 const int colortex10Format = RGBA;      // Terrain mask
 const int colortex11Format = RGBA;      // Water tiling
+const int colortex12Format = RGBA16F;   // Cloud mask
 */
 
 // Constant variables for water shader
@@ -100,11 +100,11 @@ const vec4 necrowizzardUnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);    
 const vec4 superbomb17UnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);     // Superbomb17 fog color when underwater (daytime)
 const vec4 underwaterFogColorNight = vec4(0.02, 0.13, 0.24, 0.9);               // Fog color when underwater (nighttime)
 const float waterSurfaceTransparency = 0.35;                                                    // Water surface/texture transparency
-const float waterClipPlane = 1.0;                                                               // Delete vertices too close from water surface (strange results with player reflection otherwise)
+const float waterClipPlane = 1.0;                                                               // Delete vertices too close from water surface
 const float eyeCameraOffset = 1.68;                                                             // Eye camera offset from player's feet
 const float waterBlockOffset = 1.005;                                                           // Water block clipping plane height (inside block)
 const int lowerWorldBound = -64;                                                                // Lowest possible water reflection plane height (Minecraft minimum block height)
-const float waterBlendFactor = 0.20;                                                            // How much to blend flowing water to scene
+const float waterBlendFactor = 0.30;                                                            // How much to blend flowing water to scene
 
 // Fog constants
 const int GL_LINEAR = 9729;
@@ -119,11 +119,11 @@ uniform vec2 iresolution;
 #define PLANES 1                // Reflection planes allowed [1 2 3 4]
 #define SKYTEXTURED 2           // Sun & moon reflection [1 2]
 
-// Shader Storage Buffer Object for water information in the visible scene (player view)
+// Shader Storage Buffer Object for water information in player view
 layout(std430, binding = 0) buffer SSBOWaterShader {
     int layers[384];            // -64 to 320 every possible water layer, store water fragment occurence for each height
-    int waterHeights[PLANES];   // Registered heights for reflection calculation in next frame
-    int lowestHeight;           // Height counter
+    int waterHeights[PLANES];   // Registered heights for reflection calculation
+    int lowestHeight;           // Lowest registered height (optimization in later stage)
 } layersData;
 
 // Shader Storage Buffer Object for specifying "water height mask" on all water fragments

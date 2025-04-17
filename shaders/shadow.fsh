@@ -82,7 +82,7 @@ void computeReflectionColor() {
     // Output reflection water color to shadow map
     // Effectively the reflection texture of the world
     shadowcolor00 = finalColor;
-    // g: is reflection water fragment
+    // g: is reflection water fragment (true/false)
     shadowcolor01 = vec4(0.0, isItWater, 0.0, 0.0);
     gl_FragDepth = gl_FragCoord.z;
 }

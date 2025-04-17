@@ -38,6 +38,7 @@ void main() {
 		// Ice
 		isItIce = 1.0;
 		color = applyFog(outColor * glcolor, 1.0, false);
+		color.a = min(color.a + 0.125, 1.0);
 	} else if (blockID > 10000) {
 		// Glass
 		y = 1.0;
@@ -50,8 +51,7 @@ void main() {
 		outColor.a = 1.0;
 		waterPosition = position;
 		waterNormal = vec4(encodeNormal(normal), 1.0);
-		waterColoredTexture = applyFog(outColor, 1.0, false);
-		waterColoredTexture = tintWater(waterColoredTexture, position);
+		waterColoredTexture = tintWater(outColor * mix(glcolor, getWaterColor(), 0.50), position);
 		color = vec4(outColor.rgb, waterBlendFactor) * glcolor;
 	}
 

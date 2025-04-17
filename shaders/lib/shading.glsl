@@ -72,6 +72,16 @@ vec4 applyFog(vec4 color, float factor, bool applyAlpha) {
     return color;
 }
 
+vec4 applyFogOnWater(vec4 color, vec4 waterModelPos) {
+    // Fogify water
+    vec3 worldPos = getWorldPositionFromModelPosition(waterModelPos);
+    float l = length(worldPos - cameraPosition);
+    float d = clamp((l - gl_Fog.start) * gl_Fog.scale, 0.0, 1.0);
+    color = mix(color, gl_Fog.color, d);
+
+    return color;
+}
+
 vec4 getSkyColor(vec4 waterModelPos) {
     // Get sky color on water fragment relative to player view direction
     vec3 skyDir = vec3(0.0, 1.0, 0.0);
@@ -80,16 +90,6 @@ vec4 getSkyColor(vec4 waterModelPos) {
     skyDir = normalize(mix(skyDir, reflectDir, 0.60));
 
     return vec4(calcSkyColor(skyDir), 1.0);
-}
-
-vec4 tintWater(vec4 waterCol, vec4 waterModelPosition) {
-    // Tint water based on sky color and cave ambient color
-    float amountMinWaterColor = mix(0.0, 0.70, getMidDayFastFrac01());
-    float amountInDarkness = mix(amountMinWaterColor, 1.0, getAmountInDarkness());
-    vec4 skyColor = getSkyColor(waterModelPosition);
-    vec4 waterEnvironmentColor = mix(skyColor, waterCol, amountInDarkness);
-
-    return waterEnvironmentColor;
 }
 
 vec4 addSkyTexturedToWater(vec4 waterCol, vec3 waterNormal, vec4 waterModelPosition) {
@@ -106,4 +106,14 @@ vec4 addSkyTexturedToWater(vec4 waterCol, vec3 waterNormal, vec4 waterModelPosit
     #endif
 
     return outColor;
+}
+
+vec4 tintWater(vec4 waterCol, vec4 waterModelPosition) {
+    // Tint water based on sky color and cave ambient color
+    float amountMinWaterColor = mix(0.0, 0.70, getMidDayFastFrac01());
+    float amountInDarkness = mix(amountMinWaterColor, 0.85, getAmountInDarkness());
+    vec4 skyColor = getSkyColor(waterModelPosition);
+    vec4 waterEnvironmentColor = mix(skyColor, waterCol, amountInDarkness);
+
+    return waterEnvironmentColor;
 }

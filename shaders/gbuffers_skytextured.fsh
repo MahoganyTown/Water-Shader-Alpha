@@ -13,7 +13,7 @@ in vec4 glcolor;
 
 /* RENDERTARGETS: 0,8 */
 layout(location = 0) out vec4 color;
-layout(location = 1) out vec4 sunColor;
+layout(location = 1) out vec4 sunAndMoonColor;
 
 void removeHalo(vec4 texturedColor) {
 	if (dot(texturedColor, vec4(1.0)) < 2.0) {
@@ -32,9 +32,9 @@ void main() {
 		removeHalo(texturedColor);
 
 		if (renderStage == MC_RENDER_STAGE_SUN || renderStage == MC_RENDER_STAGE_MOON) {
-			// Sun && moon fragments
+			// Sun & moon fragments
 			if (frameCounter == 1)
-				sunColor = texturedColor;
+				sunAndMoonColor = texturedColor;
 			else
 				discard;
 		}
