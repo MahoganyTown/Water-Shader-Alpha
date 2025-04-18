@@ -10,6 +10,11 @@ This shaderpack is more stable than the original mod which contained many bugs l
 ## Implementation
 This shaderpack uses the shadow pass to compute the reflection texture for all water heights. The shadow geometry shader duplicates the scene for each detected water height and computes the reflection according to each water patch. The refraction and reflection textures are then mixed together to produce the final image. An additional process runs to detect which water patch is more important to prioritize reflection calculations on bigger water patches over smaller ones. This work is carried out by two compute shaders in the composite pass.
 
+## Installation
+- Download the lastest version of the shader
+- Open .minecraft/shaderpacks folder
+- Drag and drop the __Water Shader Alpha.zip__ in shaderpacks
+
 ## FAQ
 __Why update the Water Shader Mod?__ The Water Shader Mod was particularly important to me when I played Minecraft as a kid. I loved it and wanted to update this shader to bring it to Minecraft's newer versions.
 
@@ -42,6 +47,8 @@ __Can I use your code in my shader projects?__ Yes, of course!
 
 ## Links
 - [Superbomb17's Water Shader Mod Update](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/1285819-1-6-2-water-shader-alpha-over-325-000-downloads)
+- [Mirror Link Superbomb17 Mod Update](https://www.9minecraft.net/water-shader-mod/)
+- [Necrowizzard's Water Shader Mod Archived](https://mcarchive.net/mods/water-shader)
 
 ## Credits
 I would like to thank [Coolq1000](https://github.com/coolq1000) for his help and advice. This shader would not have existed without his help. I would also like to thank the [shaderLABS](https://shaderlabs.org/wiki/Main_Page) discord community for their help.
