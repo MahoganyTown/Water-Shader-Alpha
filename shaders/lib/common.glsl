@@ -72,25 +72,24 @@ const float shadowIntervalSize = 0.0f;
 
 // Texture targets clear settings
 const bool colortex8Clear = false;
-const vec4 shadowcolor0ClearColor = vec4(0.0, 0.0, 0.0, 5.0);
+const vec4 shadowcolor0ClearColor = vec4(0.0, 0.0, 0.0, 1.0);
 
 // Texture formats
 /*
-const int shadowcolor0Format = RGBA16F; // Reflection color
+const int shadowcolor0Format = RGBA;    // Reflection color
 const int shadowcolor1Format = RGBA;    // Reflection mask (is water in reflection)
 const int colortex0Format = RGBA;       // Scene color
 const int colortex1Format = RGBA32F;    // Position of water blocks in model space
-const int colortex2Format = RGBA;       // Scene normal (encoded and in world space)
+const int colortex2Format = RGBA;       // Scene normals (encoded and in world space)
 const int colortex3Format = RGBA16F;    // Water mask
-const int colortex4Format = RGBA;       // -
+const int colortex4Format = RGBA16F;    // Cloud mask
 const int colortex5Format = RGBA;       // Ice mask
 const int colortex6Format = RGBA16F;    // Glass mask
 const int colortex7Format = RGBA;       // Lightmap color
 const int colortex8Format = RGBA;       // Sun and moon textures
 const int colortex9Format = RGBA;       // Water color
 const int colortex10Format = RGBA;      // Terrain mask
-const int colortex11Format = RGBA;      // Water tiling
-const int colortex12Format = RGBA16F;   // Cloud mask
+const int colortex11Format = RGBA;      // Water tiling 
 */
 
 // Constant variables for water shader
@@ -100,11 +99,11 @@ const vec4 necrowizzardUnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);    
 const vec4 superbomb17UnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);     // Superbomb17 fog color when underwater (daytime)
 const vec4 underwaterFogColorNight = vec4(0.02, 0.13, 0.24, 0.9);               // Fog color when underwater (nighttime)
 const float waterSurfaceTransparency = 0.35;                                                    // Water surface/texture transparency
+const float waterBlendFactor = 0.30;                                                            // How much to blend flowing water to scene
 const float waterClipPlane = 1.0;                                                               // Delete vertices too close from water surface
 const float eyeCameraOffset = 1.68;                                                             // Eye camera offset from player's feet
 const float waterBlockOffset = 1.005;                                                           // Water block clipping plane height (inside block)
 const int lowerWorldBound = -64;                                                                // Lowest possible water reflection plane height (Minecraft minimum block height)
-const float waterBlendFactor = 0.30;                                                            // How much to blend flowing water to scene
 
 // Fog constants
 const int GL_LINEAR = 9729;
@@ -114,10 +113,10 @@ const int GL_EXP2 = 2049;
 // Custom uniforms
 uniform vec2 iresolution;
 
-#define INFO 0                  // [0]
+#define INFO 0                  // Shader version [0]
 #define STYLE 1                 // Water surface style [1 2]
 #define PLANES 1                // Reflection planes allowed [1 2 3 4]
-#define SKYTEXTURED 2           // Sun & moon reflection [1 2]
+#define SKYTEXTURED 0           // Sun & moon reflection [0 1]
 
 // Shader Storage Buffer Object for water information in player view
 layout(std430, binding = 0) buffer SSBOWaterShader {
@@ -152,12 +151,30 @@ vec4 getUnderwaterDaytimeWaterColor() {
     #endif
 }
 
+// ---------------- Encoding ----------------
 vec3 encodeNormal(vec3 normal) {
     return (normal + 1.0) / 2.0;
 }
 
 vec3 decodeNormal(vec3 normal) {
     return (normal * 2.0) - 1.0;
+}
+
+int YToArray(int Y) {
+    return Y + 64;
+}
+
+int ArrayToY(int index) {
+    return index - 64;
+}
+
+// ---------------- World ----------------
+vec3 getWorldPositionFromModelPosition(vec4 modelPos) {
+    dvec3 viewPos = (gbufferModelView * modelPos).xyz;
+    dvec3 eyePlayerPos = mat3(gbufferModelViewInverse) * viewPos;
+    dvec3 worldPos = eyePlayerPos + cameraPosition + gbufferModelViewInverse[3].xyz;
+
+    return vec3(worldPos);
 }
 
 vec2 reproject(vec2 uv, float depth) {
@@ -173,13 +190,8 @@ vec2 reproject(vec2 uv, float depth) {
     return prevPos.xy / prevPos.w * 0.5 + 0.5;
 }
 
+// ---------------- Textures ----------------
 bool isWithinTexture(vec2 uv) {
     // Is uv within texture bounds
     return uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
-}
-
-float linearizeDepth(float depth) {
-    // Implemetation from: LearnOpenGL
-    float z = depth * 2.0 - 1.0; // back to NDC 
-    return ((2.0 * near * far) / (far + near - z * (far - near))) / far;	
 }

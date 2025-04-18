@@ -12,6 +12,7 @@ in vec2 gshTexcoord[];
 in vec4 gshGlcolor[];
 in vec4 gshPosition[];
 in vec3 gshPosition2[];
+in vec3 gshWorldPos[];
 in vec3 gshNormal[];
 
 out flat int blockID;
@@ -19,6 +20,7 @@ out vec2 lmcoord;
 out vec2 texcoord;
 out vec4 glcolor;
 out vec4 position;
+out vec3 worldPos;
 out vec3 normal;
 out float stillWaterAmount;
 
@@ -29,6 +31,7 @@ void outVertex(int i, float amount) {
 	lmcoord = gshLmcoord[i];
 	glcolor = gshGlcolor[i];
 	position = gshPosition[i];
+    worldPos = gshWorldPos[i];
 	normal = gshNormal[i];
 	blockID = gshBlockID[i];
     stillWaterAmount = amount;

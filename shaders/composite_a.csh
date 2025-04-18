@@ -3,7 +3,6 @@
 layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 
 #include "/lib/common.glsl"
-#include "/lib/water.glsl"
 
 void setValue(int index, int elem, inout int[PLANES] array) {
     array[index] = elem;

@@ -13,7 +13,7 @@ in vec2 texcoord;
 in vec4 glcolor;
 in vec4 position;
 
-/* RENDERTARGETS: 0,12 */
+/* RENDERTARGETS: 0,4 */
 layout(location = 0) out vec4 color;
 layout(location = 1) out vec4 cloudsMask;
 

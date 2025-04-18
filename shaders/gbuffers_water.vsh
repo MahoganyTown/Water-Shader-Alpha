@@ -10,6 +10,7 @@ out vec2 gshTexcoord;
 out vec4 gshGlcolor;
 out vec4 gshPosition;
 out vec3 gshPosition2;
+out vec3 gshWorldPos;
 out vec3 gshNormal;
 
 void main() {
@@ -23,4 +24,5 @@ void main() {
 	gshPosition = gl_Vertex;
 	gshNormal = gl_Normal;
 	gshBlockID = int(mc_Entity.x);
+	gshWorldPos = getWorldPositionFromModelPosition(gl_Vertex);
 }

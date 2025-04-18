@@ -107,7 +107,7 @@ vec4 getReflectedColor(vec4 stencil) {
     z_scale = (1.0 + (sin(sin(time_scale * 3.14159 * used_timer) + 1.5 * sin(0.8 * size_scale * 3.14159 * stencil.b)) / 150.0));
 
     vec2 disturbed = vec2(x_scale * texcoord.x, z_scale * texcoord.y);
-    disturbed = clamp(disturbed, 0.001, 0.99);
+    disturbed = clamp(disturbed, 0.001, 0.999);
     vec4 reflection = getWaterReflectionColor(disturbed);
 
     time_scale = 0.45;
@@ -120,7 +120,7 @@ vec4 getReflectedColor(vec4 stencil) {
     z_scale = (1.0 + (sin(sin(time_scale * 3.14159 * used_timer) + 1.5 * sin(size_scale * 3.14159 * stencil.b)) / 150.0));
 
     vec2 disturbed_2 = vec2(x_scale * texcoord.x, z_scale * texcoord.y);
-    disturbed_2 = clamp(disturbed_2, 0.001, 0.99);
+    disturbed_2 = clamp(disturbed_2, 0.001, 0.999);
     vec4 reflection_2 = getWaterReflectionColor(disturbed_2);
     reflection = (reflection + reflection_2) / 2.0;
 
@@ -163,6 +163,7 @@ void getSurfaceEffect(in vec4 stencil, inout vec4 reflectionColor, inout vec4 wa
     z_scale = (1.0 + (sin(sin(time_scale * 3.14159 * used_timer) + 1.5 * sin(0.8 * size_scale * 3.14159 * stencil.b)) / 200.0));
 
     vec2 disturbed = vec2(x_scale * texcoord.x, z_scale * texcoord.y);
+    disturbed = clamp(disturbed, 0.001, 0.999);
 
     float surface_effects = 1.0;
     if (surface_effects > 0.0) {

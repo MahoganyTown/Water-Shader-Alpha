@@ -13,6 +13,7 @@ in vec2 lmcoord;
 in vec2 texcoord;
 in vec4 glcolor;
 in vec4 position;
+in vec3 worldPos;
 in vec3 normal;
 in float stillWaterAmount;
 
@@ -57,7 +58,6 @@ void main() {
 
 	// Water tiling
 	float tiling = 10.0;
-	vec3 worldPos = getWorldPositionFromModelPosition(position);
 	float x = mod(worldPos.x, tiling) / tiling;
 	float z = mod(worldPos.z, tiling) / tiling;
 

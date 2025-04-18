@@ -1,12 +1,4 @@
 // ---------------- Encoding ----------------
-int YToArray(int Y) {
-    return Y + 64;
-}
-
-int ArrayToY(int index) {
-    return index - 64;
-}
-
 int getIndex(ivec2 pixelCoord) {
     // Convert 2D pixel coordinate to 1D array index
     return int(pixelCoord.y * viewWidth + pixelCoord.x);
@@ -53,27 +45,7 @@ mat4 invertPitch(mat4 viewMatrix) {
     return invertedView;
 }
 
-vec3 getWorldPositionFromModelPosition(vec4 modelPos) {
-    dvec3 viewPos = (gbufferModelView * modelPos).xyz;
-    dvec3 eyePlayerPos = mat3(gbufferModelViewInverse) * viewPos;
-    dvec3 worldPos = eyePlayerPos + cameraPosition + gbufferModelViewInverse[3].xyz;
-
-    return vec3(worldPos);
-}
-
 // ---------------- Water Utils ----------------
-float getDepth(vec2 uv) {
-    return texture(depthtex0, uv).r;
-}
-
-float getDepthNoTransluscent(vec2 uv) {
-    return texture(depthtex1, uv).r;
-}
-
-float getWaterDepth(vec2 uv) {
-    return linearizeDepth(getDepthNoTransluscent(uv)) - linearizeDepth(getDepth(uv));
-}
-
 vec4 getWaterMask(vec2 uv) {
     return texelFetch(colortex3, ivec2(uv * iresolution), 0);
 }
@@ -96,10 +68,6 @@ vec4 getStencil(vec2 uv) {
 
 bool isWater(vec4 mask) {
     return mask.b > 0.99;
-}
-
-bool isFlowing(vec2 uv) {
-    return texture(colortex11, uv).b > 0.0;
 }
 
 bool isIce(vec4 mask) {
@@ -149,15 +117,12 @@ float getIceDistance(vec4 mask) {
 
 bool isStillWater(vec4 pos, vec3 normal) {
     /* Still water has its normal pointing straight up
-    Still water is always located at the same position in world space
-    This code actually captures a bit more than just still water
-    (ie all water fragments close to still water in normal and height) */
+    Still water is always located at the same position in world space. */
 
     vec3 worldPos = getWorldPositionFromModelPosition(pos);
     float ratioPointingUp = dot(normal, vec3(0.0, 1.0, 0.0));
     float YPos = fract(worldPos.y);
 
-    // return ratioPointingUp >= 0.988 && YPos >= 0.885;
     return YPos >= 0.885 && YPos < 0.90 && ratioPointingUp >= 0.988;
 }
 
@@ -169,14 +134,6 @@ int getWaterID(vec4 modelPos) {
     // Return water ID ie water height world space
     int id = int(getWorldPositionFromModelPosition(modelPos).y);
     return (id < 0) ? id - 1 : id;
-}
-
-float getFresnelFactor(vec3 viewDir, vec3 waterNormal) {
-    // Fresnel: amount of reflection / refraction
-    float fresnel = dot(-viewDir, waterNormal);
-    fresnel = clamp(fresnel, 0.0, 1.0);
-
-    return fresnel;
 }
 
 vec4 getWaterLighting(vec2 uv) {

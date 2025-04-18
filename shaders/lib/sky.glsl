@@ -232,7 +232,7 @@ vec4 skyTexturedReflection(vec3 ro, vec3 rd, vec4 color) {
 }
 
 vec4 getCloudMask(vec2 uv) {
-	return texture(colortex12, uv);
+	return texture(colortex4, uv);
 }
 
 bool isCloud(vec4 mask) {
