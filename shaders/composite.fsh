@@ -186,7 +186,7 @@ void getSurfaceEffect(in vec4 stencil, inout vec4 reflectionColor, inout vec4 wa
     }
 
     color = vec4(color.rgb, 1.0) + vec4(reflectionColor.rgb, 1.0);
-    waterRawColor = mix(color, waterRawColor, 0.60);
+    waterRawColor = mix(color, waterRawColor, 0.50);
 }
 
 vec4 computeFinalWaterColor(vec4 stencil, vec4 color, float fadeAmount, bool glass, float glassAlpha, vec4 waterRawColor) {

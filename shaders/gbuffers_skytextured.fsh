@@ -29,7 +29,7 @@ void main() {
 	}
 
 	if (mode == 1) {
-		removeHalo(texturedColor);
+		// removeHalo(texturedColor);
 
 		if (renderStage == MC_RENDER_STAGE_SUN || renderStage == MC_RENDER_STAGE_MOON) {
 			// Sun & moon fragments

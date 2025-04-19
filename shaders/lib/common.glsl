@@ -66,10 +66,6 @@ uniform mat4 shadowModelViewInverse;
 // Settings for transitioning between bright and dark environments
 const float eyeBrightnessHalflife = 15.0f;
 
-// Settings for shadow pass
-const int shadowMapResolution = 2048;
-const float shadowIntervalSize = 0.0f;
-
 // Texture targets clear settings
 const bool colortex8Clear = false;
 const vec4 shadowcolor0ClearColor = vec4(0.0, 0.0, 0.0, 1.0);
@@ -99,7 +95,7 @@ const vec4 necrowizzardUnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);    
 const vec4 superbomb17UnderwaterFogColorDay = vec4(0.03, 0.05, 0.12, 0.99);     // Superbomb17 fog color when underwater (daytime)
 const vec4 underwaterFogColorNight = vec4(0.02, 0.13, 0.24, 0.9);               // Fog color when underwater (nighttime)
 const float waterSurfaceTransparency = 0.35;                                                    // Water surface/texture transparency
-const float waterBlendFactor = 0.30;                                                            // How much to blend flowing water to scene
+const float waterBlendFactor = 0.40;                                                            // How much to blend flowing water to scene
 const float waterClipPlane = 1.0;                                                               // Delete vertices too close from water surface
 const float eyeCameraOffset = 1.68;                                                             // Eye camera offset from player's feet
 const float waterBlockOffset = 1.005;                                                           // Water block clipping plane height (inside block)
@@ -117,6 +113,17 @@ uniform vec2 iresolution;
 #define STYLE 1                 // Water surface style [1 2]
 #define PLANES 1                // Reflection planes allowed [1 2 3 4]
 #define SKYTEXTURED 0           // Sun & moon reflection [0 1]
+#define REFLECTION_RESOLUTION 2 // Shadow map texture resolution [1 2 3]
+
+// Settings for shadow pass
+#if REFLECTION_RESOLUTION == 1
+    const int shadowMapResolution = 1024;
+#elif REFLECTION_RESOLUTION == 2
+    const int shadowMapResolution = 2048;
+#else
+    const int shadowMapResolution = 4096;
+#endif
+const float shadowIntervalSize = 0.0f;
 
 // Shader Storage Buffer Object for water information in player view
 layout(std430, binding = 0) buffer SSBOWaterShader {

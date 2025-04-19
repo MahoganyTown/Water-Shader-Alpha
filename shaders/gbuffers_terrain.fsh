@@ -38,7 +38,7 @@ void main() {
 	color = applyFog(color, 1.0, false);
 
 	// Terrain lighting (for darker water in deeper areas)
-	terrainLightMapForWater = clamp(pow(texture(lightmap, lmcoord), vec4(1.0)), 0.0, 1.0);
+	terrainLightMapForWater = texture(lightmap, lmcoord);
 	terrainLightMapForWater *= getVanillaLighting(n);
 
 	// Terrain mask

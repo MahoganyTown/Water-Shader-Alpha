@@ -1,17 +1,23 @@
 option.INFO=Water Shader Alpha
-value.INFO.0=v1.3
+value.INFO.0=v1.4
 
 option.STYLE=Water surface style
 value.STYLE.1=§bNecrowizzard
 value.STYLE.2=§bSuperbomb17
 
 option.PLANES=Available simultaneous water levels
+option.PLANES.comment=Number of water patches at different heights handled for reflections.
 value.PLANES.1=§a 1 - Low
 value.PLANES.2=§e 2 - Medium
 value.PLANES.3=§c 3 - High
 value.PLANES.4=§4 4 - Extreme
-option.PLANES.comment=Number of water patches at different heights handled for reflections.
 
 option.SKYTEXTURED=Sun & moon reflection (§cExperimental)
 value.SKYTEXTURED.0=§cOFF
 value.SKYTEXTURED.1=§aON
+
+option.REFLECTION_RESOLUTION=Resolution of reflection texture (solves flickering artifacts).
+option.REFLECTION_RESOLUTION.comment=Resolution of the shadowmap for reflections can be too small for your screen. Increase the size if you see flickering issues on reflections.
+value.REFLECTION_RESOLUTION.1=§a 1024 - Low
+value.REFLECTION_RESOLUTION.2=§e 2048 - Medium
+value.REFLECTION_RESOLUTION.3=§c 4096 - High

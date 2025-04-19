@@ -51,8 +51,11 @@ void main() {
     Sort by order occurence number, so big water patches are reflected first (next frame)
     This leads to potentially omitting some water patches if too many planes, but the ones discarded are the smallest on screen
     */
-    int heights[PLANES] = int[PLANES](lowerWorldBound - 1);
-    int occurences[PLANES] = int[PLANES](0);
+    int heights[PLANES];
+    for (int i = 0; i < PLANES; ++i) heights[i] = lowerWorldBound - 1;
+
+    int occurences[PLANES];
+    for (int i = 0; i < PLANES; ++i) occurences[i] = 0;
 
     findBiggestWaterPatches(heights, occurences);
     layersData.waterHeights = heights;
